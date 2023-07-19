@@ -1,10 +1,19 @@
+import xlrd
 import pandas as pd
 import streamlit as st
 
 def get_data(file_name:str) -> pd.DataFrame:
-    df = pd.read_excel(file_name)
-    df.columns = df.iloc[1]
-    df = df[2:]
+    file_name = file_name.name
+    _, extension = file_name.split('.')
+
+    if extension == 'xlsx':
+        df = pd.read_excel(file_name)
+        df.columns = df.iloc[1]
+        df = df[2:]
+    elif extension == 'xls':
+        df = pd.read_html(file_name)[0]
+        df.columns = df.iloc[0]
+        df = df[1:]
     return df
 
 
@@ -33,6 +42,7 @@ def convert_dtype(df:pd.DataFrame, db_type:str) -> pd.DataFrame:
                            'integer':'Number(10)',
                            'bigint':'Number(20)',
                            'datetime':'Date',
+                           'date':'Date',
                            'decimal':'Number',
                            'numeric':'Number',
                            'float':'Float(53)',
@@ -42,16 +52,17 @@ def convert_dtype(df:pd.DataFrame, db_type:str) -> pd.DataFrame:
                            'tinyint':'Number(3)',
                            'text':'Long',
                            'timestamp':'Raw',
+                           'timestmp': 'Raw',
                            'uniqueidentifier':'Varchar2(36)',
                            'int':'Number(10)',
                            'nvarchar':'Varchar2'
                           }
     
     if db_type == 'DB2':
-        df['YeniVeriTipi'] = df['VeriTipi'].map(db2_dtype_mapping).fillna(df['VeriTipi'])
+        df['YeniVeriTipi'] = df['VeriTipi'].str.lower().map(db2_dtype_mapping).fillna(df['VeriTipi'])
 
     if db_type == 'Mssql':
-        df['YeniVeriTipi'] = df['VeriTipi'].map(mssql_dtype_mapping).fillna(df['VeriTipi'])
+        df['YeniVeriTipi'] = df['VeriTipi'].str.lower().map(mssql_dtype_mapping).fillna(df['VeriTipi'])
 
     return df
 
