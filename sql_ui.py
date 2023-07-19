@@ -106,7 +106,7 @@ def main():
     with col2:
         db_type = st.selectbox("Select Source Database Type?", ("Mssql", "DB2"),)
 
-    uploaded_file = st.file_uploader("", type=["xlsx", "xls"])
+    uploaded_file = st.file_uploader("File Type", type=["xlsx", "xls"], label_visibility='hidden')
 
     if uploaded_file is not None:
         script = run(filename=uploaded_file, db_type='mssql', schema=schema)
