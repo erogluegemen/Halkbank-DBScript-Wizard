@@ -47,10 +47,10 @@ def convert_dtype(df:pd.DataFrame, db_type:str) -> pd.DataFrame:
                            'nvarchar':'Varchar2'
                           }
     
-    if db_type == 'db2':
+    if db_type == 'DB2':
         df['YeniVeriTipi'] = df['VeriTipi'].map(db2_dtype_mapping).fillna(df['VeriTipi'])
 
-    if db_type == 'mssql':
+    if db_type == 'Mssql':
         df['YeniVeriTipi'] = df['VeriTipi'].map(mssql_dtype_mapping).fillna(df['VeriTipi'])
 
     return df
@@ -109,7 +109,7 @@ def main():
     uploaded_file = st.file_uploader("File Type", type=["xlsx", "xls"], label_visibility='hidden')
 
     if uploaded_file is not None:
-        script = run(filename=uploaded_file, db_type='mssql', schema=schema)
+        script = run(filename=uploaded_file, db_type=db_type, schema=schema)
         st.code(script, language='sql') 
 
 # Run the app
