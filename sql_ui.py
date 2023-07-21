@@ -130,6 +130,9 @@ st.set_page_config(
 
 
 def main():
+    logo_image = "halkbank_logo.png"
+    st.image(logo_image, use_column_width=True)
+
     st.title("SQL Code Generator")
 
     col1, col2 = st.columns(2)
