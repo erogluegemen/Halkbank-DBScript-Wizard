@@ -85,7 +85,7 @@ def generate_sql_script(df:pd.DataFrame, schema:str) -> str:
 
 
 def run(filename:str, db_type:str, schema:str) -> str:
-    df = get_data(file=filename)
+    df = get_data(file_name=filename)
     df = convert_dtype(df, db_type=db_type)
     script = generate_sql_script(df, schema=schema)
     return script
