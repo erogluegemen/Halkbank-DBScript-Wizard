@@ -1,4 +1,3 @@
-import xlrd
 import pandas as pd
 import streamlit as st
 
@@ -118,11 +117,11 @@ def main():
         db_type = st.selectbox("Select Source Database Type?", ("Mssql", "DB2"),)
 
     uploaded_file = st.file_uploader("File Type", type=["xlsx", "xls"], label_visibility='hidden')
-
+    
     if uploaded_file is not None:
         script = run(filename=uploaded_file, db_type=db_type, schema=schema)
         st.code(script, language='sql') 
 
 # Run the app
 if __name__ == '__main__':
-    main() 
+    main()
