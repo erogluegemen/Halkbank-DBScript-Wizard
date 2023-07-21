@@ -1,7 +1,7 @@
 import pandas as pd
 import streamlit as st
 
-def get_data(file_name:str) -> pd.DataFrame:
+def get_data(file:str) -> pd.DataFrame:
     st.write(file)
     file_name = file.name
     st.write(file_name)
@@ -95,7 +95,7 @@ def generate_sql_script(df:pd.DataFrame, schema:str) -> str:
 
 
 def run(filename:str, db_type:str, schema:str) -> str:
-    df = get_data(file_name=filename)
+    df = get_data(file=filename)
     df = convert_dtype(df, db_type=db_type)
     script = generate_sql_script(df, schema=schema)
     return script
