@@ -1,20 +1,10 @@
 import pandas as pd
 import streamlit as st
 
-def get_data(file:str) -> pd.DataFrame:
-    st.write(file)
-    file_name = file.name
-    st.write(file_name)
-    _, extension = file_name.split('.')
-
-    if extension == 'xlsx':
-        df = pd.read_excel(file_name)
-        df.columns = df.iloc[1]
-        df = df[2:]
-    elif extension == 'xls':
-        df = pd.read_html(file_name)[0]
-        df.columns = df.iloc[0]
-        df = df[1:]
+def get_data(file_name:str) -> pd.DataFrame:
+    df = pd.read_excel(file_name)
+    df.columns = df.iloc[1]
+    df = df[2:]
     return df
 
 
