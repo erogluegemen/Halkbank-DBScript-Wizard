@@ -1,3 +1,4 @@
+import io
 import pandas as pd
 import streamlit as st
 
@@ -14,6 +15,7 @@ def get_data(file:str) -> pd.DataFrame:
         df.columns = df.iloc[0]
         df = df[1:]
     return df
+
 
 def convert_dtype(df:pd.DataFrame, db_type:str) -> pd.DataFrame:
     db2_dtype_mapping = {'char':'Varchar2',
@@ -98,7 +100,20 @@ def generate_sql_script(df, schema):
 
     sql_script += "\t) TABLESPACE TBS_WODS5;"
 
-    return sql_script
+    return table_name, sql_script
+
+def download_sql_file(script, table_name):
+    sql_file = io.StringIO()
+    sql_file.write(script)
+    sql_file.seek(0)
+
+    sql_bytes = sql_file.getvalue().encode('utf-8')
+    st.download_button(
+        label="Download SQL File",
+        data=sql_bytes,
+        file_name=f"{table_name}.sql",
+        mime="text/sql",
+    )
 
 
 def run(filename:str, db_type:str, schema:str) -> str:
@@ -123,13 +138,18 @@ def main():
         st.write("### Upload the Excel File")
 
     with col2:
-        db_type = st.selectbox("Select Source Database Type?", ("Mssql", "DB2"),)
+        db_type = st.selectbox("Database Type", ("Mssql", "DB2"),)
 
     uploaded_file = st.file_uploader("File Type", type=["xlsx", "xls"], label_visibility='hidden')
     
     if uploaded_file is not None:
-        script = run(filename=uploaded_file, db_type=db_type, schema=schema)
-        st.code(script, language='sql') 
+        table_name, script = run(filename = uploaded_file,
+                                 db_type = db_type,
+                                 schema = schema)
+        
+        st.code(script, language='sql')
+
+        download_sql_file(script, table_name)
 
 # Run the app
 if __name__ == '__main__':
