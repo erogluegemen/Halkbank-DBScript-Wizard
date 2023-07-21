@@ -2,6 +2,7 @@ import pandas as pd
 import streamlit as st
 
 def get_data(file_name:str) -> pd.DataFrame:
+    st.write(file_name)
     df = pd.read_excel(file_name)
     df.columns = df.iloc[1]
     df = df[2:]
