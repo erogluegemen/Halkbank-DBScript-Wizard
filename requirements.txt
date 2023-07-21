@@ -3,3 +3,4 @@ streamlit==1.22.0
 pandas==1.5.3
 xlrd==2.0.1
 lxml==4.9.1
+html5lib==1.1
