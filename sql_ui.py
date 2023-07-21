@@ -2,7 +2,9 @@ import pandas as pd
 import streamlit as st
 
 def get_data(file_name:str) -> pd.DataFrame:
-    file_name = file_name.name
+    st.write(file)
+    file_name = file.name
+    st.write(file_name)
     _, extension = file_name.split('.')
 
     if extension == 'xlsx':
