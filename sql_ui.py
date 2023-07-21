@@ -65,12 +65,13 @@ def convert_dtype(df:pd.DataFrame, db_type:str) -> pd.DataFrame:
     return df
 
 
-def generate_sql_script(df:pd.DataFrame, schema:str) -> str:
+def generate_sql_script(df, schema):
     length_contained_types = ['Varchar2(15)', 'Number(5)', 'Number(10)', 'Number(19)', 'Timestamp(6)',
                               'Number(1)', 'Number(20)', 'Float(53)', 'Float(24)', 'Number(3)',
                               'Number(19,4)', 'Varchar2(36)']
 
-    sql_script = f"CREATE TABLE {schema}.{df.iloc[0]['TabloAd']} (\n"
+    table_name = df.iloc[0]['TabloAd']
+    sql_script = f"CREATE TABLE {schema}.{table_name} (\n"
 
     for index, row in df.iterrows():
         col_name = row['KolonAd']
@@ -80,13 +81,22 @@ def generate_sql_script(df:pd.DataFrame, schema:str) -> str:
             data_length = data_type
         else:
             data_length = f'{data_type}({row["VeriUzunluk"]})'
-        
+
         sql_script += f"\t{col_name} {data_length},\n"
 
-    # Add DWH Date Time
+    # Add DWH Date Time columns with default values
     sql_script += "\tVA_AKTAR_TAR DATE DEFAULT trunc(sysdate),\n"
-    sql_script += "\tVA_AKTAR_ZMN VARCHAR2(15 BYTE) DEFAULT to_CHAR(sysdate, 'HH24:MI:SS')\n"
-    sql_script += f"\t) TABLESPACE TBS_{schema.upper()};"
+    sql_script += "\tVA_AKTAR_ZMN VARCHAR2(15 BYTE) DEFAULT to_CHAR(sysdate, 'HH24:MI:SS'),\n"
+
+    # Extract primary key columns
+    pk_column_names = df[df['PK'] == 'EVET']['KolonAd'].tolist()
+
+    # Add primary key constraint
+    if pk_column_names:
+        pk_constraint = f"CONSTRAINT PK_{table_name} PRIMARY KEY ({', '.join(pk_column_names)})"
+        sql_script += f"\t{pk_constraint}\n"
+
+    sql_script += "\t) TABLESPACE TBS_WODS5;"
 
     return sql_script
 
