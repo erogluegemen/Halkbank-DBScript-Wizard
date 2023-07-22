@@ -98,7 +98,7 @@ def generate_sql_script(df, schema):
         pk_constraint = f"CONSTRAINT PK_{table_name} PRIMARY KEY ({', '.join(pk_column_names)})"
         sql_script += f"\t{pk_constraint}\n"
 
-    sql_script += "\t) TABLESPACE TBS_WODS5;"
+    sql_script += f"\t) TABLESPACE TBS_{schema.upper()};"
 
     return table_name, sql_script
 
