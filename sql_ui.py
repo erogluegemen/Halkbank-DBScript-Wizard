@@ -71,6 +71,7 @@ def generate_sql_script(df, schema):
     length_contained_types = ['Varchar2(15)', 'Number(5)', 'Number(10)', 'Number(19)', 'Timestamp(6)',
                               'Number(1)', 'Number(20)', 'Float(53)', 'Float(24)', 'Number(3)',
                               'Number(19,4)', 'Varchar2(36)']
+    null_list = ['-', '0', ' ', '']
 
     table_name = df.iloc[0]['TabloAd']
     sql_script = f"CREATE TABLE {schema}.{table_name} (\n"
@@ -78,11 +79,22 @@ def generate_sql_script(df, schema):
     for index, row in df.iterrows():
         col_name = row['KolonAd']
         data_type = row['YeniVeriTipi']
+        decimal_type = row['VeriKurus']
 
-        if data_type in length_contained_types:
-            data_length = data_type
+        if data_type == 'Date':
+            data_length = f'{data_type}'
+
+        elif data_type in length_contained_types:
+            if decimal_type  in null_list:
+                data_length = f'{data_type}'
+            else:
+                data_length = f'{data_type}({decimal_type})'
+
         else:
-            data_length = f'{data_type}({row["VeriUzunluk"]})'
+            if decimal_type  in null_list:
+                data_length = f'{data_type}({row["VeriUzunluk"]})'
+            else:
+                data_length = f'{data_type}({row["VeriUzunluk"]},{decimal_type})'
 
         sql_script += f"\t{col_name} {data_length},\n"
 
@@ -95,12 +107,13 @@ def generate_sql_script(df, schema):
 
     # Add primary key constraint
     if pk_column_names:
-        pk_constraint = f"CONSTRAINT PK_{table_name} PRIMARY KEY ({', '.join(pk_column_names)})"
+        pk_constraint = f"CONSTRAINT {table_name}_PK PRIMARY KEY ({', '.join(pk_column_names)})"
         sql_script += f"\t{pk_constraint}\n"
 
-    sql_script += f"\t) TABLESPACE TBS_{schema.upper()};"
+    sql_script += "\t) TABLESPACE TBS_WODS5;"
 
     return table_name, sql_script
+
 
 def download_sql_file(script, table_name):
     sql_file = io.StringIO()
