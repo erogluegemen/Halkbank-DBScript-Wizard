@@ -51,8 +51,8 @@ def convert_dtype(df:pd.DataFrame, db_type:str) -> pd.DataFrame:
                            'money':'Number(19,4)',
                            'tinyint':'Number(3)',
                            'text':'Long',
-                           'timestamp':'Raw',
-                           'timestmp': 'Raw',
+                           'timestamp':'Timestamp(6)',
+                           'timestmp': 'Timestamp(6)',
                            'uniqueidentifier':'Varchar2(36)',
                            'int':'Number(10)',
                            'nvarchar':'Varchar2'
