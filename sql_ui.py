@@ -150,7 +150,7 @@ def main():
 
     col1, col2 = st.columns(2)
     with col1:
-        schema  = st.text_input('Schema Name', 'wods5')
+        schema  = st.text_input('Schema Name', 'wods4')
         st.write("### Upload the Excel File")
 
     with col2:
