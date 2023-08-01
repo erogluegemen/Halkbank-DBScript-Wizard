@@ -67,7 +67,7 @@ def convert_dtype(df:pd.DataFrame, db_type:str) -> pd.DataFrame:
     return df
 
 
-def generate_sql_script(df, schema):
+def generate_sql_script(df:pd.DataFrame, schema:str):
     length_contained_types = ['Varchar2(15)', 'Number(5)', 'Number(10)', 'Number(19)', 'Timestamp(6)',
                               'Number(1)', 'Number(20)', 'Float(53)', 'Float(24)', 'Number(3)',
                               'Number(19,4)', 'Varchar2(36)']
