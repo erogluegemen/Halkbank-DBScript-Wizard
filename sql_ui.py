@@ -154,7 +154,7 @@ def main():
         st.write("### Upload the Excel File")
 
     with col2:
-        db_type = st.selectbox("Database Type", ("Mssql", "DB2"),)
+        db_type = st.selectbox("Database Type", ("DB2", "Mssql"))
 
     uploaded_file = st.file_uploader("File Type", type=["xlsx", "xls"], label_visibility='hidden')
     
